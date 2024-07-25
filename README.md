@@ -86,4 +86,4 @@ The workflow is tested by placing the flights.csv file in S3 bucket. The EventBr
 ![redshift](redshift.png)
 
 #### Email Notification
-![email]( email.png)
+![email](email.png)
