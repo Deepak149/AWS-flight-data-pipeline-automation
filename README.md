@@ -3,6 +3,7 @@
 Airlines and aviation data providers require an efficient and automated system to handle the daily influx of flight data for analysis and reporting purposes. The goal is to develop a scalable and reliable data pipeline on AWS that automates the ingestion, processing, and storage of flight data. The solution should ensure timely updates, maintain data integrity, and provide stakeholders with immediate notifications on the status of data processing tasks. This will enable better decision-making, enhance operational efficiency, and reduce the overhead associated with manual data handling.
 
 
+
 ## Tables in Redshift
 
 'airlines.airports_dim' 
@@ -10,6 +11,7 @@ columns : airport_id, city, state, name
 
 'airlines.daily_flights_fact'
 columns : carrier, dep_airport, arr_airport, dep_city, arr_city, dep_state, arr_state, dep_delay, arr_delay
+
 
 
 ## incoming data in S3
@@ -25,6 +27,7 @@ deepakreddy@Deepaks-MacBook-Pro ~ % aws s3 ls airlines-data-landing/daily-flight
 2024-07-23 10:45:37          0 
 ```
 
+
 ## Solution Architecture
 
 The architecture of the Flight Data Pipeline Automation project leverages several AWS services to create a seamless, automated workflow for ingesting, processing, and storing flight data. Below is a detailed explanation of the architecture:
@@ -38,7 +41,7 @@ The architecture of the Flight Data Pipeline Automation project leverages severa
 2. Event Triggering:
     Amazon EventBridge: An EventBridge rule monitors the S3 bucket for the addition of new CSV files. When a new file is detected, it triggers the workflow.
 
-3. Workflow Orchestration:
+3. Workflow Orchestration
 
     - AWS Step Functions: Manages the sequential execution of tasks. The workflow consists of several steps:
     - Start Glue Crawler: Initiates a Glue Crawler to update the data catalog of the S3 data.
@@ -47,7 +50,7 @@ The architecture of the Flight Data Pipeline Automation project leverages severa
     - Check Job Status: Monitors the Glue Job status.
     - Send Notification: Sends success or failure notifications using SNS.
 
-4. Data Cataloging:
+4. Data Cataloging
     Data Catalog is created for the S3 data and also for dim and fact tables in Redshift. The crawler that is run with the workflow is only for the S3 data.
     AWS Glue Crawler: Scans the S3 bucket and updates the AWS Glue Data Catalog with the schema information of the new data.
 
