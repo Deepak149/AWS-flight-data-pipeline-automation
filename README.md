@@ -23,7 +23,6 @@ deepakreddy@Deepaks-MacBook-Pro ~ % aws s3 ls airlines-data-landing/daily-flight
 2024-07-23 10:45:37          0 
 ```
 
-<br>
 ## Solution Architecture
 
 The architecture of the Flight Data Pipeline Automation project leverages several AWS services to create a seamless, automated workflow for ingesting, processing, and storing flight data. Below is a detailed explanation of the architecture:
@@ -35,7 +34,7 @@ The architecture of the Flight Data Pipeline Automation project leverages severa
     (e.g., s3://flight-data/year=2024/month=07/day=23/).
 
 2. Event Triggering:<br>
-    Amazon EventBridge: An EventBridge rule monitors the S3 bucket for the addition of new CSV files. When a new file is detected, it triggers the workflow.<br>
+    Amazon EventBridge: An EventBridge rule monitors the S3 bucket for the addition of new CSV files. When a new file is detected, it triggers the workflow.<br><br>
 
 3. Workflow Orchestration<br>
     - AWS Step Functions: Manages the sequential execution of tasks. The workflow consists of several steps:
@@ -47,7 +46,7 @@ The architecture of the Flight Data Pipeline Automation project leverages severa
 
 4. Data Cataloging<br>
     Data Catalog is created for the S3 data and also for dim and fact tables in Redshift. The crawler that is run with the workflow is only for the S3 data.
-    AWS Glue Crawler: Scans the S3 bucket and updates the AWS Glue Data Catalog with the schema information of the new data.<br>
+    AWS Glue Crawler: Scans the S3 bucket and updates the AWS Glue Data Catalog with the schema information of the new data.<br><br>
 
 5. Data Processing:<br>
     AWS Glue Job: A Glue ETL (Extract, Transform, Load) job processes the ingested flight data. This involves:
