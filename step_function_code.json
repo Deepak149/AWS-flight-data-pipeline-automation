@@ -1,0 +1,84 @@
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "StartCrawler",
+  "States": {
+    "StartCrawler": {
+      "Type": "Task",
+      "Parameters": {
+        "Name": "daily-flights-s3"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Next": "GetCrawler"
+    },
+    "GetCrawler": {
+      "Type": "Task",
+      "Parameters": {
+        "Name": "daily-flights-s3"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Next": "is_running?"
+    },
+    "is_running?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.Crawler.State",
+          "StringMatches": "RUNNING",
+          "Next": "Wait"
+        }
+      ],
+      "Default": "Glue StartJobRun"
+    },
+    "Wait": {
+      "Type": "Wait",
+      "Seconds": 60,
+      "Next": "GetCrawler"
+    },
+    "Glue StartJobRun": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "flight_data_load_daily"
+      },
+      "Next": "glue_job_status",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed"
+          ],
+          "Comment": "failure",
+          "Next": "failure_notification"
+        }
+      ]
+    },
+    "glue_job_status": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.JobRunState",
+          "StringMatches": "SUCCEEDED",
+          "Next": "success_notification"
+        }
+      ],
+      "Default": "failure_notification"
+    },
+    "success_notification": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:us-east-1:381492248270:flights-data-daily-load",
+        "Message": "Glue Job Execution Successful !!"
+      },
+      "End": true
+    },
+    "failure_notification": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "TopicArn": "arn:aws:sns:us-east-1:381492248270:flights-data-daily-load"
+      },
+      "End": true
+    }
+  }
+}

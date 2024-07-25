@@ -63,4 +63,27 @@ The architecture of the Flight Data Pipeline Automation project leverages severa
 7. Monitoring and Notifications:<br>
     - Amazon SNS: Sends email notifications to stakeholders. Notifications are sent upon:
     - Successful completion of the Glue Job.
-    - Failure of any step in the process, enabling quick troubleshooting and response.
+    - Failure of any step in the process, enabling quick troubleshooting and response. <br><br>
+
+## Key Features
+
+-  Automated Data Ingestion : Automatically handles daily uploads of flight data to Amazon S3 with Hive-style partitioning for organized data storage.
+- Schema Management : AWS Glue Crawler updates the data catalog automatically, maintaining an up-to-date schema for all ingested data.
+- Comprehensive Monitoring and Notifications : Amazon SNS sends email notifications on the success or failure of data processing tasks, enabling quick response and troubleshooting.
+
+
+## Sample Run
+
+The workflow is tested by placing the flights.csv file in S3 bucket. The EventBridge invoked the Step Function. The step function states and the glue job have executed successfully and the notification is sent.
+
+#### Step Function
+![Step Function pic](state-machine-run.png)
+
+#### Glue Job
+![glue_run](glue_run.png)
+
+#### Data in redshift
+![redshift](redshift.png)
+
+#### Email Notification
+![email](email.png)
